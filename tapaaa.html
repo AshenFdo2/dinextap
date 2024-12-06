@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Tap Bot</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        .stats, .store {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #0078d7;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:active {
+            background-color: #005fa3;
+        }
+        .btn-disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .counter {
+            font-size: 18px;
+            margin: 10px 0;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+    <h1>Advanced Tap Bot</h1>
+    <p>Earn coins and upgrade your tap bot experience!</p>
+    
+    <div class="stats">
+        <p><strong>Coins:</strong> <span id="coins">0</span></p>
+        <p><strong>Storage:</strong> <span id="storage">10</span></p>
+        <p><strong>Boosters:</strong> <span id="boosters">1x</span></p>
+    </div>
+
+    <button class="btn" onclick="handleTap()">Tap Me!</button>
+    <div class="counter">Taps Stored: <span id="tapCount">0</span></div>
+    
+    <div class="store">
+        <h2>Store</h2>
+        <button class="btn" onclick="buyStorage()">Upgrade Storage (+5) - 20 Coins</button>
+        <button class="btn" onclick="buyBooster()">Add Booster (+1x) - 50 Coins</button>
+        <button class="btn" onclick="doubleCoins()">Double Coins - 30 Coins</button>
+        <button class="btn" onclick="recharge()">Recharge Taps - 10 Coins</button>
+    </div>
+
+    <script>
+        // Initialize Telegram Web App
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        // Game Stats
+        let coins = 0;         // Total coins
+        let tapCount = 0;      // Stored taps
+        let storage = 10;      // Max storage
+        let boosters = 1;      // Boosters (multiplier)
+
+        // Update UI
+        function updateUI() {
+            document.getElementById("coins").textContent = coins;
+            document.getElementById("tapCount").textContent = tapCount;
+            document.getElementById("storage").textContent = storage;
+            document.getElementById("boosters").textContent = boosters + "x";
+        }
+
+        // Handle Taps
+        function handleTap() {
+            if (tapCount < storage) {
+                tapCount += boosters;
+                updateUI();
+            } else {
+                alert("Storage full! Upgrade your storage or recharge.");
+            }
+        }
+
+        // Store Actions
+        function buyStorage() {
+            if (coins >= 20) {
+                storage += 5;
+                coins -= 20;
+                updateUI();
+            } else {
+                alert("Not enough coins to upgrade storage.");
+            }
+        }
+
+        function buyBooster() {
+            if (coins >= 50) {
+                boosters += 1;
+                coins -= 50;
+                updateUI();
+            } else {
+                alert("Not enough coins to buy a booster.");
+            }
+        }
+
+        function doubleCoins() {
+            if (coins >= 30) {
+                coins *= 2;
+                coins -= 30;
+                updateUI();
+            } else {
+                alert("Not enough coins to double.");
+            }
+        }
+
+        function recharge() {
+            if (coins >= 10) {
+                tapCount = 0; // Reset taps to empty storage
+                coins -= 10;
+                updateUI();
+            } else {
+                alert("Not enough coins to recharge.");
+            }
+        }
+
+        // Earn Coins (Simulate Sending Data to Bot)
+        setInterval(() => {
+            if (tapCount > 0) {
+                coins += tapCount;
+                tapCount = 0; // Reset tap count after earning
+                tg.sendData(`Earned coins: ${coins}`);
+                updateUI();
+            }
+        }, 5000); // Send data every 5 seconds
+    </script>
+</body>
+</html>
