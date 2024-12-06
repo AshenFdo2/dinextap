@@ -9,17 +9,33 @@
       font-family: Arial, sans-serif;
       text-align: center;
       margin-top: 50px;
+      background-color: #f0f0f0;
+      color: #333;
     }
     button {
-      padding: 10px 20px;
-      font-size: 20px;
+      padding: 15px 30px;
+      font-size: 24px;
       cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #coinCount {
+      margin-top: 30px;
+      font-size: 24px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <h1>Welcome to TapBot</h1>
-  <p>Earn coins by tapping the button!</p>
+  <p>Tap the button below to earn coins!</p>
+  
   <button onclick="earnCoins()">Tap Me!</button>
   <div id="coinCount">Coins: 0</div>
 
@@ -32,16 +48,15 @@
       document.getElementById('coinCount').innerText = `Coins: ${coins}`;
       
       // If Telegram WebApp is present, update the bot with coin count
-      if (window.Telegram.WebApp) {
+      if (window.Telegram && window.Telegram.WebApp) {
         window.Telegram.WebApp.onEvent('themeChanged', function () {
-          // You can send the updated coin count or other data back to your bot here.
-          // Example: send a message back to your bot with the updated coin count.
+          // Send data back to your bot (for example, update the coins count)
           window.Telegram.WebApp.sendData('coins:' + coins);
         });
       }
     }
     
-    // This will ensure Telegram WebApp API is ready
+    // Initialize Telegram WebApp
     window.onload = function () {
       if (window.Telegram && window.Telegram.WebApp) {
         window.Telegram.WebApp.expand();
